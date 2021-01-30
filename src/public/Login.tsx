@@ -18,7 +18,8 @@ class Login extends Component {
             password: this.password
         });
 
-        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('token', response.data.token);
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
         console.log(response);
 
         this.setState({
@@ -30,7 +31,7 @@ class Login extends Component {
     render() {
 
         if(this.state.redirect){
-            return <Redirect to={'/'} />;
+            return <Redirect to={'/dashboard'} />;
         }
 
         return (

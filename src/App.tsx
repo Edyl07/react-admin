@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
-import Nav from './secure/components/Nav';
-import Dashboard from './secure/Dashboard';
+import Dashboard from './secure/dashboard/Dashboard';
 import { BrowserRouter, Route } from 'react-router-dom';
-import Users from './secure/Users';
+import Users from './secure/users/Users';
 import Login from './public/Login';
 import Register from './public/Register';
+import RedirectToDashboard from './secure/components/RedirectToDashboard';
+import UserCreate from './secure/users/UserCreate';
 
 function App() {
   return (
@@ -13,10 +14,12 @@ function App() {
  <div className="App">
     <div className="container-fluid">
         <BrowserRouter>
-            <Route path={'/'} exact component={Dashboard} />
-            <Route path={'/users'} component={Users} />
+            <Route path={'/'} exact component={RedirectToDashboard} />
+            <Route path={'/dashboard'} exact component={Dashboard} />
             <Route path={'/login'} component={Login} />
             <Route path={'/register'} component={Register} />
+            <Route path={'/users'} exact component={Users} />
+            <Route path={'/users/create'} component={UserCreate} />
         </BrowserRouter>
     </div>
  </div>
