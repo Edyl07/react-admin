@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { Component, SyntheticEvent } from "react";
 import { Redirect } from "react-router-dom";
+import ImageUpload from "../components/ImageUpload";
 import Wrapper from "../Wrapper";
 
 export default class ProductCreate extends Component {
   state = {
-      image: '',
+    image: "",
     redirect: false,
   };
 
@@ -33,24 +34,18 @@ export default class ProductCreate extends Component {
     });
   };
 
-  upload = async (files: FileList | null) => {
-        if (files === null) return;
-
-        const data = new FormData();
-        data.append('image', files[0]);
-
-        const response = await axios.post('upload', data);
-        this.image = response.data.url;        
-
-        this.setState({
-            image: this.image
-        });
-  }
+  imageChanged = async (image: string) => {
+    
+    this.image = image;
+    this.setState({
+      image: this.image,
+    });
+  };
 
   render() {
     if (this.state.redirect) {
-        return <Redirect to={"/products"} />;
-      }
+      return <Redirect to={"/products"} />;
+    }
     return (
       <Wrapper>
         <form onSubmit={this.submit}>
@@ -94,24 +89,10 @@ export default class ProductCreate extends Component {
           </div>
           <div className="form-group">
             <label htmlFor="description">Image</label>
-            <input
-              type="text"
-              id="image"
-              name="image"
-              value={this.image = this.state.image}
-              onChange={(e) => (this.image = e.target.value)}
-              className="form-control"
+            <ImageUpload
+              value={(this.image = this.state.image)}
+              imageChanged={this.imageChanged}
             />
-            <div className="input-group-append">
-              <label className="btn btn-primary">
-                Upload
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => this.upload(e.target.files)}
-                />
-              </label>
-            </div>
           </div>
           <div className="form-group">
             <label htmlFor="price">Price</label>
