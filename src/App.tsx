@@ -7,6 +7,12 @@ import Login from './public/Login';
 import Register from './public/Register';
 import RedirectToDashboard from './secure/components/RedirectToDashboard';
 import UserCreate from './secure/users/UserCreate';
+import UserEdit from './secure/users/UserEdit';
+import Roles from './secure/roles/Roles';
+import RoleCreate from './secure/roles/RoleCreate';
+import RoleEdit from './secure/roles/RoleEdit';
+import Products from './secure/products/Products';
+import ProductCreate from './secure/products/ProductCreate';
 
 function App() {
   return (
@@ -20,6 +26,12 @@ function App() {
             <Route path={'/register'} component={Register} />
             <Route path={'/users'} exact component={Users} />
             <Route path={'/users/create'} component={UserCreate} />
+            <Route path={'/users/:id/edit'} component={UserEdit} />
+            <Route path={'/roles'} exact component={Roles} />
+            <Route path={'/roles/create'} component={RoleCreate} />
+            <Route path={'/roles/:id/edit'} component={RoleEdit} />
+            <Route path={'/products'} exact component={Products} />
+            <Route path={'/products/create'} component={ProductCreate} />
         </BrowserRouter>
     </div>
  </div>
