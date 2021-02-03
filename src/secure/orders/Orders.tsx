@@ -1,52 +1,57 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { User } from "../../classes/user";
-import Deleter from "../components/Deleter";
+import { Order } from "../../classes/orders";
 import Paginator from "../components/Paginator";
 import Wrapper from "../Wrapper";
 
-class Users extends Component {
+export default class Orders extends Component {
   state = {
-    users: [],
+    orders: [],
   };
 
   page = 1;
   last_page = 0;
 
   componentDidMount = async () => {
-    const response = await axios.get(`users?page=${this.page}`);
+    const response = await axios.get(`orders?page=${this.page}`);
     this.setState({
-      users: response.data.data,
+      orders: response.data.data,
     });
     this.last_page = response.data.meta.last_page;
   };
 
   handlePageChange = async (page: number) => {
-    this.page = page;
-    await this.componentDidMount();
+        this.page = page;
+
+        await this.componentDidMount()
   }
 
-  handleDelete = async (id: number) => {
-    this.setState({
-        users: this.state.users.filter((u: User) => u.id !== id)
-    });
+  handleExport = async () => {
+      const response = await axios.get('export', { responseType: 'blob'});
+      const blob = new Blob([response.data], {type: 'text/csv'});
+      // create manually url
+      const downloadUrl = window.URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = 'orders.csv';
+      link.click();
+
   }
 
   render() {
     return (
       <Wrapper>
-        <div className="d-flex justify-content-between flex-wrap flex-md-nowrpa align-items-center pt-3 pb-3 mb-3 border-bottom">
+          <div className="d-flex justify-content-between flex-wrap flex-md-nowrpa align-items-center pt-3 pb-3 mb-3 border-bottom">
           <div className="btn-toolbar mb-2 mb-md-0">
-            <Link
-              to={"/users/create"}
+            <a
+              onClick={this.handleExport}
               className="btn btn-sm btn-outline-secondary"
             >
-              Add
-            </Link>
+              Export
+            </a>
           </div>
         </div>
-
         <div className="table-responsive">
           <table className="table table-striped table-sm">
             <thead>
@@ -54,29 +59,28 @@ class Users extends Component {
                 <th>#</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Role</th>
+                <th>Total</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {this.state.users.map((user: User) => {
+              {this.state.orders.map((order: Order) => {
                 return (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
+                  <tr key={order.id}>
+                    <td>{order.id}</td>
                     <td>
-                      {user.first_name} {user.last_name}
+                      {order.first_name} {order.last_name}
                     </td>
-                    <td>{user.email}</td>
-                    <td>{user.role.name}</td>
+                    <td>{order.email}</td>
+                    <td>{order.total} M-un</td>
                     <td>
                       <div className="btn-group mr-2">
                         <Link
-                          to={`/users/${user.id}/edit`}
+                          to={`/orders/${order.id}`}
                           className="btn btn-sm btn-outline-warning"
                         >
-                          Edit
+                          View
                         </Link>
-                        <Deleter id={user.id} endpoint={'products'} handleDelete={this.handleDelete} />
                       </div>
                     </td>
                   </tr>
@@ -90,5 +94,3 @@ class Users extends Component {
     );
   }
 }
-
-export default Users;
