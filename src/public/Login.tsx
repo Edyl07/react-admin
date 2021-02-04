@@ -13,14 +13,14 @@ class Login extends Component {
 
     submit =  async(e: SyntheticEvent) => {
         e.preventDefault();
-        const response = await axios.post('login', {
+        await axios.post('login', {
             email: this.email,
             password: this.password
         });
 
-        localStorage.setItem('token', response.data.token);
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-        console.log(response);
+        // localStorage.setItem('token', response.data.token);
+        // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+        // console.log(response);
 
         this.setState({
             redirect: true
@@ -31,7 +31,7 @@ class Login extends Component {
     render() {
 
         if(this.state.redirect){
-            return <Redirect to={'/dashboard'} />;
+            return <Redirect to={'/'} />;
         }
 
         return (

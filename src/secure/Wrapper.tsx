@@ -1,10 +1,13 @@
 import axios from 'axios';
-import React, { Component } from 'react';
+import React, { Component, Dispatch, PropsWithChildren } from 'react';
 import { Redirect } from 'react-router-dom';
 import Menu from './components/Menu';
 import Nav from './components/Nav';
+import { connect } from 'react-redux';
+import { User } from '../classes/user';
+import setUser from '../redux/actions/setUserAction';
 
-class Wrapper extends Component {
+class Wrapper extends Component<PropsWithChildren<any>> {
 
     state= {
         redirect: false
@@ -13,7 +16,15 @@ class Wrapper extends Component {
     componentDidMount =  async () => {
         try {
             const response = await axios.get('user');
-            console.log(response);
+            const user: User = response.data.data;
+            this.props.setUser(new User(
+                user.id,
+                user.first_name,
+                user.last_name,
+                user.email,
+                user.role,
+                user.permissions,
+            ));
         } catch (e) {
             this.setState({
                 redirect: true
@@ -44,4 +55,16 @@ class Wrapper extends Component {
     }
 }
 
-export default Wrapper;
+const mapStateToProps = (state: { user: User }) => {
+    return {
+        user: state.user
+    };
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => {
+    return {
+        setUser: (user: User) => dispatch(setUser(user))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Wrapper);

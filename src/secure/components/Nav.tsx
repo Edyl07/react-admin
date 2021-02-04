@@ -1,26 +1,19 @@
 import axios from "axios";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { Role } from "../../classes/role";
 import { User } from "../../classes/user";
 
-class Nav extends Component {
+class Nav extends Component<{user: User}> {
   state = {
     redirect: false,
-    user: new User(0, "", "", "", new Role(0, "", []), []),
   };
 
-  componentDidMount = async () => {
-    const response = await axios.get("user");
-    console.log(response);
+  
 
-    this.setState({
-      user: response.data.data,
-    });
-  };
-
-  handleClick = () => {
-    localStorage.clear();
+  handleClick = async () => {
+    // localStorage.clear();
+    await axios.post('logout', {});
     this.setState({
       redirect: true,
     });
@@ -32,12 +25,12 @@ class Nav extends Component {
     }
     return (
       <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a className="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">
+        <Link to={'/'} className="navbar-brand col-md-3 col-lg-2 mr-0 px-3" >
           Dashboard
-        </a>
+        </Link>
         <ul className="my-2 my-md-0 mr-md-3">
           <Link to={"/profile"} className="p-2 text-white">
-            {this.state.user.first_name} {this.state.user.last_name}
+            {this.props.user.name}
           </Link>
           <a className="p-2 text-white" onClick={this.handleClick}>
             Sign out
@@ -48,4 +41,7 @@ class Nav extends Component {
   }
 }
 
-export default Nav;
+
+
+// @ts-ignore
+export default connect(state => ({user: state.user}))(Nav);
